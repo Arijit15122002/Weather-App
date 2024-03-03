@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+    <title>Weather App</title>
+</head>
+<body>
+    <div class="alert"></div>
+
+    <div class="card">
+        <div class="search">
+            <input type="text" placeholder="Search" >
+            <button>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="23px" height="23px"
+                style="margin-top: 1px;"
+                >
+                    <path d="M 13 3 C 7.4889971 3 3 7.4889971 3 13 C 3 18.511003 7.4889971 23 13 23 C 15.396508 23 17.597385 22.148986 19.322266 20.736328 L 25.292969 26.707031 A 1.0001 1.0001 0 1 0 26.707031 25.292969 L 20.736328 19.322266 C 22.148986 17.597385 23 15.396508 23 13 C 23 7.4889971 18.511003 3 13 3 z M 13 5 C 17.430123 5 21 8.5698774 21 13 C 21 17.430123 17.430123 21 13 21 C 8.5698774 21 5 17.430123 5 13 C 5 8.5698774 8.5698774 5 13 5 z" fill="black" />
+                  </svg>
+            </button>
+        </div>
+        <div class="weather">
+            <img src="images/rain.png" alt="" class="weather-icon">
+            <h1 class="temp">20°C</h1>
+            <h2 class="city">New York</h2>
+            <div class="details">
+                <div>
+                    <img src="images/humidity.png" alt="">
+                    <div>
+                        <span class="humidity">28%</span>
+                        <p>Humidity</p>
+                    </div>
+                </div>
+                <div>
+                    <img src="images/wind.png" alt="">
+                    <div>
+                        <span class="wind">15km/h</span>
+                        <p>Wind Speed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<script>
+
+    const apiKey = "a08d95388d3f0127872830191203eab6";
+    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?&units=metric`
+
+    const searchBox = document.querySelector(".search input")
+    const searchBtn = document.querySelector(".search button")
+
+    const icon = document.querySelector(".weather-icon")
+
+    async function CheckWeather(city)
+    {
+
+        const response = await fetch(apiUrl + `&q=${city}` + `&appid=${apiKey}`);
+        var data = await response.json();
+
+        console.log(data);
+
+        document.querySelector(".temp").innerHTML = Math.floor(data.main.feels_like) + "°C";
+
+        document.querySelector(".city").innerHTML = data.name;
+
+        document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
+
+        document.querySelector(".wind").innerHTML = Math.floor(data.wind.speed) + "km/h";
+
+        if(data.weather[0].main == "Clouds" ) icon.src = "images/clouds.png"
+        else if(data.weather[0].main == "Snow") icon.src = "images/snow.png"
+        else if(data.weather[0].main == "Rain") icon.src = "images/rain.png"
+        else if(data.weather[0].main == "Haze") icon.src = "images/mist.png"
+        else if(data.weather[0].main == "Drizzle") icon.src = "images/drizzle.png"
+        else if(data.weather[0].main == "Clear") icon.src = "images/clear.png"
+
+
+    }
+
+    searchBtn.addEventListener("click", () => {
+        CheckWeather(searchBox.value)
+    })
+
+</script>
+
+</body>
+</html>
